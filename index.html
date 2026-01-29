@@ -1,0 +1,900 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Kids Math Garden — Pop & Learn</title>
+  <style>
+    :root{
+      --bg:#0b1220;
+      --panel: rgba(255,255,255,.08);
+      --panel2: rgba(255,255,255,.06);
+      --line: rgba(255,255,255,.14);
+      --text:#f3f6ff;
+      --muted: rgba(243,246,255,.75);
+      --good:#37d996;
+      --bad:#ff5c7a;
+      --sun:#ffd166;
+      --sky1:#7c5cff;
+      --sky2:#39d98a;
+      --r: 18px;
+      --shadow: 0 18px 60px rgba(0,0,0,.35);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:18px;
+      background:
+        radial-gradient(1100px 700px at 20% 0%, rgba(124,92,255,.30), transparent 55%),
+        radial-gradient(900px 600px at 85% 20%, rgba(57,217,138,.22), transparent 55%),
+        linear-gradient(180deg, #070a14, var(--bg));
+      color:var(--text);
+    }
+    .app{
+      width:min(1100px, 100%);
+      display:grid;
+      grid-template-columns: 1.3fr .7fr;
+      gap:14px;
+    }
+    @media (max-width: 950px){
+      .app{ grid-template-columns: 1fr; }
+    }
+    .card{
+      border:1px solid var(--line);
+      background: linear-gradient(180deg, var(--panel), var(--panel2));
+      border-radius: var(--r);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      position:relative;
+    }
+    .header{
+      padding:14px 16px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      border-bottom:1px solid rgba(255,255,255,.10);
+      background:
+        radial-gradient(600px 180px at 20% 0%, rgba(255,209,102,.20), transparent 70%),
+        linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      user-select:none;
+    }
+    .logo{
+      width:40px;height:40px;border-radius:14px;
+      background:
+        radial-gradient(circle at 30% 30%, rgba(255,255,255,.40), rgba(255,255,255,.08)),
+        linear-gradient(135deg, rgba(255,209,102,.95), rgba(124,92,255,.85));
+      border:1px solid rgba(255,255,255,.18);
+      position:relative;
+      overflow:hidden;
+    }
+    .logo:after{
+      content:"";
+      position:absolute; inset:-12px;
+      background: radial-gradient(circle at 65% 25%, rgba(255,255,255,.25), transparent 55%);
+      transform: rotate(12deg);
+    }
+    .brand h1{
+      margin:0;
+      font-size:16px;
+      letter-spacing:.2px;
+    }
+    .brand p{
+      margin:2px 0 0 0;
+      font-size:12px;
+      color:var(--muted);
+    }
+    .pills{display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end;}
+    .pill{
+      display:flex; gap:8px; align-items:center;
+      padding:7px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.16);
+      background: rgba(0,0,0,.16);
+      font-size:12px;
+      color:var(--muted);
+      user-select:none;
+    }
+    .emoji{filter: drop-shadow(0 6px 14px rgba(0,0,0,.25));}
+    .btn{
+      border:1px solid rgba(255,255,255,.16);
+      background: rgba(0,0,0,.16);
+      color:var(--text);
+      padding:10px 12px;
+      border-radius: 14px;
+      cursor:pointer;
+      transition: transform .06s ease, background .15s ease, border-color .15s ease;
+      user-select:none;
+      font-weight:600;
+    }
+    .btn:hover{ background: rgba(255,255,255,.06); border-color: rgba(255,255,255,.24); }
+    .btn:active{ transform: translateY(1px); }
+    .btn.primary{
+      background: linear-gradient(135deg, rgba(124,92,255,.95), rgba(124,92,255,.55));
+      border-color: rgba(124,92,255,.60);
+    }
+    .btn.good{
+      background: linear-gradient(135deg, rgba(57,217,138,.95), rgba(57,217,138,.55));
+      border-color: rgba(57,217,138,.60);
+    }
+    .btn.bad{
+      background: linear-gradient(135deg, rgba(255,92,122,.95), rgba(255,92,122,.55));
+      border-color: rgba(255,92,122,.55);
+    }
+    .btn.small{ padding:8px 10px; font-size:12px; font-weight:600; }
+    .main{
+      padding:14px;
+      display:grid;
+      gap:12px;
+    }
+    .scene{
+      border-radius: 18px;
+      border:1px solid rgba(255,255,255,.12);
+      overflow:hidden;
+      background:
+        radial-gradient(900px 360px at 40% -10%, rgba(124,92,255,.35), transparent 60%),
+        radial-gradient(900px 360px at 80% 10%, rgba(57,217,138,.25), transparent 60%),
+        linear-gradient(180deg, rgba(255,255,255,.05), rgba(0,0,0,.16));
+      position:relative;
+      min-height: 420px;
+    }
+    .ground{
+      position:absolute; left:-40px; right:-40px; bottom:-80px; height:220px;
+      background:
+        radial-gradient(90px 70px at 10% 30%, rgba(255,255,255,.10), transparent 60%),
+        radial-gradient(110px 80px at 35% 40%, rgba(255,255,255,.08), transparent 60%),
+        radial-gradient(110px 80px at 65% 40%, rgba(255,255,255,.08), transparent 60%),
+        radial-gradient(90px 70px at 90% 30%, rgba(255,255,255,.10), transparent 60%),
+        linear-gradient(180deg, rgba(57,217,138,.30), rgba(57,217,138,.06));
+      border-top:1px solid rgba(255,255,255,.10);
+      transform: rotate(-2deg);
+      border-radius: 80px 80px 0 0;
+    }
+    .sun{
+      position:absolute; right:18px; top:18px;
+      width:64px; height:64px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.55), rgba(255,255,255,.10)),
+                  radial-gradient(circle at 50% 50%, rgba(255,209,102,1), rgba(255,209,102,.2));
+      box-shadow: 0 18px 60px rgba(255,209,102,.22);
+      border:1px solid rgba(255,255,255,.16);
+    }
+    .cloud{
+      position:absolute;
+      width:120px; height:46px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.10);
+      border:1px solid rgba(255,255,255,.10);
+      filter: blur(.1px);
+      opacity:.9;
+    }
+    .cloud:before,.cloud:after{
+      content:"";
+      position:absolute;
+      background: rgba(255,255,255,.10);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius: 999px;
+      top:-16px;
+      width:56px; height:56px;
+    }
+    .cloud:before{ left:10px; }
+    .cloud:after{ right:12px; top:-24px; width:70px; height:70px; }
+    .cloud.c1{ left:18px; top:26px; transform: scale(.95); }
+    .cloud.c2{ left:220px; top:56px; transform: scale(1.1); opacity:.7; }
+    .cloud.c3{ left:520px; top:30px; transform: scale(.85); opacity:.65; }
+    @media (max-width: 900px){
+      .cloud.c3{ display:none; }
+    }
+
+    .promptBox{
+      position:absolute;
+      left:14px; right:14px; top:14px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+      pointer-events:none;
+    }
+    .prompt{
+      pointer-events:auto;
+      padding:10px 12px;
+      border-radius: 16px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.20);
+      display:flex;
+      gap:10px;
+      align-items:center;
+      max-width: 720px;
+    }
+    .prompt .big{
+      font-size:16px;
+      font-weight:800;
+      letter-spacing:.2px;
+    }
+    .prompt .small{
+      font-size:12px;
+      color:var(--muted);
+      margin-top:2px;
+    }
+    .promptText{display:grid; gap:2px;}
+    .status{
+      pointer-events:auto;
+      padding:10px 12px;
+      border-radius: 16px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.20);
+      font-size:12px;
+      color:var(--muted);
+      display:flex;
+      gap:8px;
+      align-items:center;
+      user-select:none;
+      white-space:nowrap;
+    }
+    .dot{
+      width:10px; height:10px; border-radius: 999px;
+      background: var(--sun);
+      box-shadow: 0 0 0 4px rgba(255,209,102,.16);
+    }
+    .dot.good{ background: var(--good); box-shadow: 0 0 0 4px rgba(57,217,138,.16); }
+    .dot.bad{ background: var(--bad); box-shadow: 0 0 0 4px rgba(255,92,122,.16); }
+
+    .garden{
+      position:absolute;
+      left:0; right:0; top:0; bottom:0;
+    }
+    .patch{
+      position:absolute;
+      left:0; right:0; bottom:0;
+      height: 78%;
+      pointer-events:auto;
+    }
+
+    /* Balloons */
+    .balloon{
+      position:absolute;
+      width:84px; height:92px;
+      transform: translate(-50%, -50%);
+      cursor:pointer;
+      user-select:none;
+      border-radius: 999px 999px 999px 999px;
+      border:1px solid rgba(255,255,255,.18);
+      background:
+        radial-gradient(circle at 30% 25%, rgba(255,255,255,.45), rgba(255,255,255,.06)),
+        radial-gradient(circle at 45% 55%, rgba(255,255,255,.06), rgba(0,0,0,.10)),
+        linear-gradient(180deg, rgba(255,255,255,.08), rgba(0,0,0,.20));
+      box-shadow: 0 14px 34px rgba(0,0,0,.28);
+      transition: transform .08s ease, filter .15s ease;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight:900;
+      font-size:22px;
+    }
+    .balloon:active{ transform: translate(-50%, -50%) scale(.97); }
+    .balloon:hover{ filter: brightness(1.08); }
+    .balloon .shine{
+      position:absolute;
+      width:18px; height:36px;
+      left:16px; top:16px;
+      border-radius:999px;
+      background: rgba(255,255,255,.18);
+      transform: rotate(18deg);
+    }
+    .balloon .string{
+      position:absolute;
+      width:2px; height:46px;
+      bottom:-44px; left:50%;
+      transform: translateX(-50%);
+      background: rgba(255,255,255,.18);
+      border-radius:999px;
+    }
+    .balloon .knot{
+      position:absolute;
+      bottom:-8px; left:50%;
+      transform: translateX(-50%);
+      width:14px; height:12px;
+      background: rgba(255,255,255,.16);
+      border:1px solid rgba(255,255,255,.14);
+      border-radius: 0 0 10px 10px;
+    }
+
+    /* Feedback pop */
+    .pop{
+      position:absolute;
+      transform: translate(-50%, -50%);
+      pointer-events:none;
+      font-weight:900;
+      font-size:18px;
+      text-shadow: 0 10px 30px rgba(0,0,0,.35);
+      opacity:0;
+      animation: pop 800ms ease forwards;
+    }
+    @keyframes pop{
+      0%{ opacity:0; transform: translate(-50%, -50%) scale(.8); }
+      15%{ opacity:1; transform: translate(-50%, -58%) scale(1); }
+      100%{ opacity:0; transform: translate(-50%, -95%) scale(1.05); }
+    }
+
+    .panel{
+      display:grid;
+      gap:12px;
+      padding:14px;
+    }
+    .tile{
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.14);
+      border-radius: 18px;
+      padding:12px;
+    }
+    .tile h3{
+      margin:0;
+      font-size:13px;
+      letter-spacing:.2px;
+    }
+    .tile p{
+      margin:6px 0 0 0;
+      font-size:12px;
+      color:var(--muted);
+      line-height:1.35;
+    }
+    .stars{
+      display:flex;
+      gap:6px;
+      margin-top:10px;
+      flex-wrap:wrap;
+    }
+    .star{
+      width:32px; height:32px;
+      border-radius: 12px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.04);
+      display:grid;
+      place-items:center;
+      font-size:16px;
+      opacity:.35;
+      transition: opacity .15s ease, transform .15s ease;
+    }
+    .star.on{ opacity:1; transform: translateY(-1px); }
+    .row{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:space-between;
+    }
+    .footer{
+      border-top:1px solid rgba(255,255,255,.10);
+      padding:12px 14px;
+      color:var(--muted);
+      font-size:12px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      flex-wrap:wrap;
+      gap:10px;
+      background: rgba(0,0,0,.12);
+    }
+    .kbd{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: 11px;
+      padding: 2px 6px;
+      border-radius: 8px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.18);
+      color: var(--text);
+    }
+    a{ color: rgba(255,209,102,.95); text-decoration:none; }
+    a:hover{ text-decoration:underline; }
+
+    /* Reduce motion */
+    @media (prefers-reduced-motion: reduce){
+      .pop{ animation:none; opacity:1; }
+      .balloon{ transition:none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <!-- GAME -->
+    <section class="card">
+      <div class="header">
+        <div class="brand">
+          <div class="logo" aria-hidden="true"></div>
+          <div>
+            <h1>Kids Math Garden</h1>
+            <p>Pop the balloon with the correct answer 🎈</p>
+          </div>
+        </div>
+        <div class="pills">
+          <div class="pill"><span class="emoji">⭐</span> Stars: <b id="stars">0</b></div>
+          <div class="pill"><span class="emoji">🔥</span> Streak: <b id="streak">0</b></div>
+          <div class="pill"><span class="emoji">🎯</span> Level: <b id="level">1</b></div>
+        </div>
+      </div>
+
+      <div class="main">
+        <div class="row">
+          <div style="display:flex; gap:10px; flex-wrap:wrap;">
+            <button class="btn primary" id="startBtn">Start</button>
+            <button class="btn" id="nextBtn">Next</button>
+            <button class="btn bad" id="resetBtn">Reset</button>
+          </div>
+          <div style="display:flex; gap:10px; flex-wrap:wrap;">
+            <button class="btn small" id="soundBtn" title="Toggle sound">🔊 Sound: ON</button>
+            <button class="btn small" id="helpBtn" title="Show a hint">💡 Hint</button>
+          </div>
+        </div>
+
+        <div class="scene" id="scene" aria-label="Game area">
+          <div class="sun" aria-hidden="true"></div>
+          <div class="cloud c1" aria-hidden="true"></div>
+          <div class="cloud c2" aria-hidden="true"></div>
+          <div class="cloud c3" aria-hidden="true"></div>
+
+          <div class="promptBox">
+            <div class="prompt" id="prompt">
+              <div style="font-size:22px">🧠</div>
+              <div class="promptText">
+                <div class="big" id="question">Press Start!</div>
+                <div class="small" id="sub">Pop the balloon with the correct number.</div>
+              </div>
+            </div>
+            <div class="status">
+              <span class="dot" id="dot"></span>
+              <span id="statusText">Ready</span>
+            </div>
+          </div>
+
+          <div class="garden">
+            <div class="patch" id="patch" aria-label="Balloons appear here"></div>
+            <div class="ground" aria-hidden="true"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer">
+        <div>Tip: click/tap balloons. Keyboard: <span class="kbd">N</span> next · <span class="kbd">H</span> hint · <span class="kbd">R</span> reset</div>
+        <div>Progress saved on this device · <a href="#" id="wipe">wipe</a></div>
+      </div>
+    </section>
+
+    <!-- SIDE PANEL -->
+    <aside class="card">
+      <div class="header">
+        <div class="brand">
+          <div>
+            <h1>How it works</h1>
+            <p>Simple, visual, and interactive</p>
+          </div>
+        </div>
+        <div class="pills">
+          <div class="pill"><span class="emoji">⏱️</span> Time: <b id="time">0:00</b></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="tile">
+          <h3>Goal</h3>
+          <p>Solve tiny math puzzles. Pop the right balloon to earn <b>stars</b>. Get three stars to level up.</p>
+          <div class="stars" id="starRow" aria-label="Stars earned this level"></div>
+        </div>
+
+        <div class="tile">
+          <h3>Choose a difficulty</h3>
+          <div class="row" style="margin-top:10px;">
+            <button class="btn" data-diff="1">Easy 😊</button>
+            <button class="btn" data-diff="2">Medium 🙂</button>
+            <button class="btn" data-diff="3">Hard 😮</button>
+          </div>
+          <p style="margin-top:10px;">Easy: + / − small numbers · Medium: bigger numbers · Hard: includes × sometimes.</p>
+        </div>
+
+        <div class="tile">
+          <h3>Parent/Teacher note</h3>
+          <p>Mechanism supports repeated practice with immediate feedback. Items are generated with increasing number range as the level rises.</p>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+<script>
+/* Kids Math Garden — single file
+   - Visual click/tap interaction
+   - Simple loop: question -> 4 balloons -> pop correct
+   - Levels and stars saved to localStorage
+*/
+
+const LS_KEY = "kids_math_garden_v1";
+
+const $ = (id)=>document.getElementById(id);
+const ui = {
+  startBtn: $("startBtn"),
+  nextBtn: $("nextBtn"),
+  resetBtn: $("resetBtn"),
+  soundBtn: $("soundBtn"),
+  helpBtn: $("helpBtn"),
+  wipe: $("wipe"),
+
+  question: $("question"),
+  sub: $("sub"),
+  patch: $("patch"),
+  scene: $("scene"),
+
+  stars: $("stars"),
+  streak: $("streak"),
+  level: $("level"),
+  time: $("time"),
+  starRow: $("starRow"),
+
+  dot: $("dot"),
+  statusText: $("statusText")
+};
+
+let settings = {
+  sound: true,
+  diff: 1 // 1 easy, 2 medium, 3 hard
+};
+
+let game = {
+  running:false,
+  level:1,
+  starsTotal:0,
+  starsThisLevel:0,
+  streak:0,
+  startedAt:0,
+  timer:null,
+  current:null, // {text, answer, hint, options[]}
+};
+
+function load(){
+  const raw = localStorage.getItem(LS_KEY);
+  if(!raw) return;
+  try{
+    const d = JSON.parse(raw);
+    if(typeof d.level==="number") game.level = d.level;
+    if(typeof d.starsTotal==="number") game.starsTotal = d.starsTotal;
+    if(typeof d.diff==="number") settings.diff = d.diff;
+    if(typeof d.sound==="boolean") settings.sound = d.sound;
+  }catch{}
+}
+function save(){
+  localStorage.setItem(LS_KEY, JSON.stringify({
+    level: game.level,
+    starsTotal: game.starsTotal,
+    diff: settings.diff,
+    sound: settings.sound
+  }));
+}
+
+function setStatus(kind, text){
+  ui.dot.className = "dot" + (kind ? ` ${kind}` : "");
+  ui.statusText.textContent = text;
+}
+
+function updateHud(){
+  ui.level.textContent = String(game.level);
+  ui.stars.textContent = String(game.starsTotal);
+  ui.streak.textContent = String(game.streak);
+  renderStarsThisLevel();
+}
+
+function renderStarsThisLevel(){
+  ui.starRow.innerHTML = "";
+  for(let i=0;i<3;i++){
+    const s = document.createElement("div");
+    s.className = "star" + (i < game.starsThisLevel ? " on" : "");
+    s.textContent = "⭐";
+    ui.starRow.appendChild(s);
+  }
+}
+
+function fmtClock(ms){
+  const sec = Math.max(0, Math.floor(ms/1000));
+  return `${Math.floor(sec/60)}:${String(sec%60).padStart(2,"0")}`;
+}
+
+function startTimer(){
+  stopTimer();
+  game.startedAt = Date.now();
+  game.timer = setInterval(()=> ui.time.textContent = fmtClock(Date.now() - game.startedAt), 250);
+}
+function stopTimer(){
+  if(game.timer) clearInterval(game.timer);
+  game.timer = null;
+}
+
+function beep(type="good"){
+  if(!settings.sound) return;
+  const AudioCtx = window.AudioContext || window.webkitAudioContext;
+  if(!AudioCtx) return;
+  const ctx = new AudioCtx();
+  const o = ctx.createOscillator();
+  const g = ctx.createGain();
+  o.connect(g); g.connect(ctx.destination);
+  const t = ctx.currentTime;
+
+  const freq = type==="good" ? 740 : 220;
+  o.frequency.setValueAtTime(freq, t);
+  o.type = "sine";
+  g.gain.setValueAtTime(0.0001, t);
+  g.gain.exponentialRampToValueAtTime(0.18, t + 0.02);
+  g.gain.exponentialRampToValueAtTime(0.0001, t + 0.22);
+  o.start(t);
+  o.stop(t + 0.24);
+  o.onended = ()=> ctx.close();
+}
+
+function popText(x, y, text, good=true){
+  const d = document.createElement("div");
+  d.className = "pop";
+  d.style.left = x + "px";
+  d.style.top = y + "px";
+  d.style.color = good ? "rgba(57,217,138,.95)" : "rgba(255,92,122,.95)";
+  d.textContent = text;
+  ui.scene.appendChild(d);
+  setTimeout(()=> d.remove(), 850);
+}
+
+function clearBalloons(){
+  ui.patch.innerHTML = "";
+}
+
+function randInt(a,b){
+  return Math.floor(Math.random()*(b-a+1))+a;
+}
+
+function uniqueOptions(answer, count, min, max){
+  const set = new Set([answer]);
+  while(set.size < count){
+    const n = randInt(min, max);
+    if(n !== answer) set.add(n);
+  }
+  return [...set].sort(()=>Math.random()-0.5);
+}
+
+function makeQuestion(){
+  const L = game.level;
+  const diff = settings.diff;
+
+  // number ranges scale with level
+  const baseMax = diff===1 ? 10 : diff===2 ? 20 : 30;
+  const max = Math.min(99, baseMax + L*2);
+  const min = 0;
+
+  let a, b, op, answer, text, hint;
+
+  if(diff===3 && L>=2 && Math.random() < 0.35){
+    // sometimes multiplication on hard
+    op = "×";
+    a = randInt(2, Math.min(9, 3 + Math.floor(L/2)));
+    b = randInt(2, Math.min(9, 3 + Math.floor(L/2)));
+    answer = a*b;
+    text = `${a} ${op} ${b} = ?`;
+    hint = `Count groups: ${a} groups of ${b}.`;
+  } else {
+    // addition / subtraction
+    op = Math.random() < 0.6 ? "+" : "−";
+    a = randInt(min, max);
+    b = randInt(min, max);
+
+    if(op==="−" && b>a) [a,b] = [b,a]; // avoid negative for kids
+    answer = op==="+" ? (a+b) : (a-b);
+
+    // keep answer in a friendly range
+    if(answer > 99){
+      a = randInt(0, 50);
+      b = randInt(0, 40);
+      op = "+";
+      answer = a+b;
+    }
+    text = `${a} ${op} ${b} = ?`;
+    hint = op==="+" ? "Try counting on!" : "Try counting back!";
+  }
+
+  // options: 4 balloons
+  const spread = diff===1 ? 6 : diff===2 ? 10 : 14;
+  const options = uniqueOptions(answer, 4, Math.max(0, answer - spread), Math.min(99, answer + spread));
+
+  return { text, answer, hint, options, op };
+}
+
+function placeBalloons(q){
+  clearBalloons();
+  const w = ui.patch.clientWidth;
+  const h = ui.patch.clientHeight;
+
+  // 4 positions (avoid overlap)
+  const spots = [
+    {x: w*0.20, y: h*0.42},
+    {x: w*0.42, y: h*0.62},
+    {x: w*0.62, y: h*0.40},
+    {x: w*0.82, y: h*0.58},
+  ];
+
+  const palettes = [
+    ["rgba(255,209,102,.95)","rgba(255,209,102,.35)"],
+    ["rgba(124,92,255,.95)","rgba(124,92,255,.35)"],
+    ["rgba(57,217,138,.95)","rgba(57,217,138,.35)"],
+    ["rgba(255,92,122,.95)","rgba(255,92,122,.35)"],
+  ];
+
+  q.options.forEach((num, i)=>{
+    const b = document.createElement("div");
+    b.className = "balloon";
+    b.style.left = spots[i].x + "px";
+    b.style.top = spots[i].y + "px";
+
+    // color via gradient overlays
+    const [c1,c2] = palettes[i % palettes.length];
+    b.style.background =
+      `radial-gradient(circle at 30% 25%, rgba(255,255,255,.45), rgba(255,255,255,.06)),
+       radial-gradient(circle at 45% 55%, ${c2}, rgba(0,0,0,.12)),
+       linear-gradient(180deg, ${c1}, rgba(0,0,0,.20))`;
+
+    b.innerHTML = `<div class="shine"></div><div class="knot"></div><div class="string"></div><span>${num}</span>`;
+    b.setAttribute("role","button");
+    b.setAttribute("aria-label", `Answer ${num}`);
+    b.addEventListener("click", (e)=> choose(num, e));
+    ui.patch.appendChild(b);
+  });
+}
+
+function showQuestion(){
+  if(!game.running) return;
+  game.current = makeQuestion();
+  ui.question.textContent = game.current.text;
+  ui.sub.textContent = "Pop the balloon with the correct number.";
+  setStatus("", "Pick one!");
+  placeBalloons(game.current);
+  save();
+}
+
+function choose(num, e){
+  if(!game.running || !game.current) return;
+  const correct = (num === game.current.answer);
+
+  const rect = ui.scene.getBoundingClientRect();
+  const x = (e.clientX || (rect.left + rect.width/2)) - rect.left;
+  const y = (e.clientY || (rect.top + rect.height/2)) - rect.top;
+
+  if(correct){
+    beep("good");
+    game.streak += 1;
+    game.starsTotal += 1;
+    game.starsThisLevel += 1;
+
+    setStatus("good", "Yay! ⭐");
+    popText(x, y, "+1 STAR!", true);
+
+    // small reward: level up every 3 stars earned in this level
+    if(game.starsThisLevel >= 3){
+      game.level += 1;
+      game.starsThisLevel = 0;
+      setStatus("good", "Level up! 🎉");
+      popText(x, y-20, "LEVEL UP!", true);
+    }
+
+    updateHud();
+    save();
+
+    // next question quickly
+    setTimeout(showQuestion, 650);
+  } else {
+    beep("bad");
+    game.streak = 0;
+    setStatus("bad", "Oops! Try again.");
+    popText(x, y, "TRY AGAIN", false);
+    updateHud();
+    save();
+  }
+}
+
+function hint(){
+  if(!game.running || !game.current) return;
+  ui.sub.textContent = "Hint: " + game.current.hint;
+  setStatus("", "Hint shown 💡");
+}
+
+function start(){
+  game.running = true;
+  setStatus("", "Let’s play!");
+  startTimer();
+  updateHud();
+  showQuestion();
+}
+
+function next(){
+  if(!game.running){
+    setStatus("bad", "Press Start first.");
+    return;
+  }
+  showQuestion();
+}
+
+function reset(){
+  game.running = false;
+  game.level = 1;
+  game.starsTotal = 0;
+  game.starsThisLevel = 0;
+  game.streak = 0;
+  game.current = null;
+
+  stopTimer();
+  ui.time.textContent = "0:00";
+  ui.question.textContent = "Press Start!";
+  ui.sub.textContent = "Pop the balloon with the correct number.";
+  clearBalloons();
+  setStatus("", "Ready");
+  updateHud();
+  save();
+}
+
+function wipe(){
+  localStorage.removeItem(LS_KEY);
+  load(); // restore defaults
+  reset();
+}
+
+function toggleSound(){
+  settings.sound = !settings.sound;
+  ui.soundBtn.textContent = settings.sound ? "🔊 Sound: ON" : "🔇 Sound: OFF";
+  save();
+}
+
+function setDifficulty(d){
+  settings.diff = d;
+  save();
+  const label = d===1 ? "Easy 😊" : d===2 ? "Medium 🙂" : "Hard 😮";
+  setStatus("", `Difficulty: ${label}`);
+  if(game.running) showQuestion();
+}
+
+// Events
+ui.startBtn.addEventListener("click", start);
+ui.nextBtn.addEventListener("click", next);
+ui.resetBtn.addEventListener("click", reset);
+ui.helpBtn.addEventListener("click", hint);
+ui.soundBtn.addEventListener("click", toggleSound);
+ui.wipe.addEventListener("click", (e)=>{ e.preventDefault(); wipe(); });
+
+document.addEventListener("click", async ()=>{
+  // unlock audio on some browsers after first interaction
+  // (no-op if already unlocked)
+});
+
+document.addEventListener("keydown", (e)=>{
+  const k = e.key.toLowerCase();
+  if(k==="n") next();
+  if(k==="h") hint();
+  if(k==="r") reset();
+});
+
+// Difficulty buttons
+document.querySelectorAll("[data-diff]").forEach(btn=>{
+  btn.addEventListener("click", ()=> setDifficulty(Number(btn.dataset.diff)));
+});
+
+// Init
+load();
+toggleSound(); // will invert once; fix by setting directly after
+settings.sound = JSON.parse(localStorage.getItem(LS_KEY) || "{}").sound ?? true;
+ui.soundBtn.textContent = settings.sound ? "🔊 Sound: ON" : "🔇 Sound: OFF";
+updateHud();
+renderStarsThisLevel();
+setStatus("", "Ready");
+save();
+</script>
+</body>
+</html>
